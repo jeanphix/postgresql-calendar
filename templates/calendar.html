@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+        body > section {
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+        h1 {
+            float: left;
+            font-weight: normal;
+        }
+        h1, nav {
+            font-size: 150%;
+        }
+        nav {
+            float: right;
+        }
+        nav * {
+            display: inline-block;
+            text-decoration: none;
+            color: inherit;
+        }
+        a {
+            cursor: pointer;
+        }
+        table {
+            table-layout: fixed;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table * {
+            text-align: left;
+            font-weight: normal;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        table th {
+            padding-left: 0.5rem
+        }
+        table td {
+            height: 5vw;
+            padding: 0.5rem;
+            border: 1px #ddd solid;
+            vertical-align: top;
+        }
+        table td:hover {
+            background: #f6f6f6;
+        }
+        table td.outside {
+            background: #eee;
+        }
+        table td.today {
+            background: #fff9b4;
+        }
+        </style>
+    </head>
+    <body>
+        <section>
+            <h1>{{ month.strftime('%B %Y') }}</h1>
+            <nav role="navigation">
+                <ul>
+                    <li><a href="{{ url_for('calendar', year=previous.year, month=previous.month) }}" rel="previous" title="{{ previous.strftime('%B %Y') }}"><</a></li>
+                    <li><a href="{{ url_for('calendar', year=next.year, month=next.month) }}" rel="next" title="{{ next.strftime('%B %Y') }}">></a></li>
+                </ul>
+            </nav>
+            <table>
+                <thead>
+                    <tr>
+                        {% for day in days|batch(7)|first %}
+                        <th>{{ day[0].strftime('%a') }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for week in days|batch(7) %}
+                    <tr>
+                        {% for day in week %}
+                        {% set day=day[0] %}
+                        <td class="
+                            {% if day.month != month.month %}outside{% endif %}
+                            {% if day.date() == today %}today{% endif %}
+                        ">
+                            {% if day.day == 1 %}{{ day.strftime('%b') }} {% endif %}{{ day.day }}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                <tbody>
+            <table>
+        </section>
+    </body>
+</html>
